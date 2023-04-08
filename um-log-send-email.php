@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Log Send Email
  * Description:     Extension to Ultimate Member for logging of notification emails within UM.
- * Version:         2.0.0
+ * Version:         2.1.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -41,7 +41,7 @@ class UM_Log_Send_Email {
         <div><?php echo $this->current_timestamp;?></div> 
         <div>--- UM Email Configurations ---</div>
 
-        <div>Mail appears from:  			<?php $mail_from = UM()->options()->get('mail_from'); if( ! empty( $mail_from ) ){echo UM()->options()->get('mail_from');}else{echo "-";}; echo "\n";?></div>
+        <div>Mail appears from:             <?php $mail_from = UM()->options()->get('mail_from'); if( ! empty( $mail_from ) ){echo UM()->options()->get('mail_from');}else{echo "-";}; echo "\n";?></div>
         <div>Mail appears from address:  	<?php $mail_from_addr = UM()->options()->get('mail_from_addr'); if( ! empty( $mail_from_addr ) ){echo UM()->options()->get('mail_from_addr');}else{echo "-";}; echo "\n";?></div>
         <div>Use HTML for E-mails:   		<?php echo $this->info_value( UM()->options()->get('email_html'), 'yesno', true ); ?></div>
 
@@ -55,8 +55,8 @@ class UM_Log_Send_Email {
         <div>Password Reset Email:   		<?php echo $this->info_value( UM()->options()->get('resetpw_email_on'), 'yesno', true ); ?></div>
         <div>Password Changed Email: 		<?php echo $this->info_value( UM()->options()->get('changedpw_email_on'), 'yesno', true ); ?></div>
 
-        <div>Account Updated Email: 		    <?php echo $this->info_value( UM()->options()->get('changedaccount_email_on'), 'yesno', true ); ?></div>
-        <div>New User Notification: 		    <?php echo $this->info_value( UM()->options()->get('notification_new_user_on'), 'yesno', true ); ?></div>
+        <div>Account Updated Email:             <?php echo $this->info_value( UM()->options()->get('changedaccount_email_on'), 'yesno', true ); ?></div>
+        <div>New User Notification:             <?php echo $this->info_value( UM()->options()->get('notification_new_user_on'), 'yesno', true ); ?></div>
         <div>Account Needs Review Notification: <?php echo $this->info_value( UM()->options()->get('notification_review_on'), 'yesno', true ); ?></div>
         <div>Account Deletion Notification:     <?php echo $this->info_value( UM()->options()->get('notification_deletion_on'), 'yesno', true ); ?></div>
 
@@ -122,18 +122,18 @@ class UM_Log_Send_Email {
         add_filter( 'x_redirect_by',                        array( $this, 'wp_redirect_trace_log' ), 10, 3 );
         add_action( 'doing_it_wrong_run',                   array( $this, 'doing_it_wrong_run_trace_log' ), 10, 3 );
 
-        $this->um_log_send_email_filewrite( 'um_user_register user_id: ' . $user_id . ' role ID: ' . $args['role'] );
+        $this->um_log_send_email_filewrite( 'um_user_register user_id: ' . $user_id . ' role ID: ' . $args['role'] . ' form ID: ' . $args['form_id']  . ' referer: ' . $args['_wp_http_referer'] );
     }
 
     public function um_registration_complete_trace_log( $user_id, $args ) {
 
-        $this->um_log_send_email_filewrite( 'um_registration_complete user_id: ' . $user_id . ' role ID: ' . $args['role']);         
+        $this->um_log_send_email_filewrite( 'um_registration_complete user_id: ' . $user_id . ' role ID: ' . $args['role'] . ' form ID: ' . $args['form_id'] . ' referer: ' . $args['_wp_http_referer']  );         
     }
 
     public function um_locate_email_template_trace_log( $template, $template_name ) {
 
-        if ( file_exists( $template )) $found = ' template found OK';
-        else $found = ' template NOT found';
+        if ( file_exists( $template )) $found = ' template: found OK';
+        else $found = ' template: NOT found';
 
         $this->um_log_send_email_filewrite( 'um_locate_email_template: ' . $template_name . ' path: ' . str_replace( ABSPATH, '...', $template ) . $found );
         return $template;
@@ -157,7 +157,7 @@ class UM_Log_Send_Email {
 
     public function wp_mail_um_trace_log( $array ) {
 
-        $this->um_log_send_email_filewrite( 'wp_mail: ' . $array['to'] . ' subject: ' . $array['subject'] . '<div>email message:</div><div>' . esc_html( $array['message'] ) . '</div><div>...</div>' );
+        $this->um_log_send_email_filewrite( 'wp_mail: ' . $array['to'] . ' subject: "' . $array['subject'] . '"<div>email message:</div><div>' . esc_html( $array['message'] ) . '</div><div>...</div>' );
         return $array;
     }
 
