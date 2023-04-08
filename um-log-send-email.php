@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Log Send Email
  * Description:     Extension to Ultimate Member for logging of notification emails within UM.
- * Version:         2.1.0
+ * Version:         2.2.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -151,13 +151,13 @@ class UM_Log_Send_Email {
 
     public function um_email_send_message_content_trace_log( $message, $slug, $args ) {
 
-        $this->um_log_send_email_filewrite( 'um_email_send_message_content slug: ' . $slug . '<div>email template:</div><div>' . esc_html( $message ) . '</div><div>...</div>' );
+        $this->um_log_send_email_filewrite( 'um_email_send_message_content slug: ' . $slug . '<div>email template:</div><div><pre>' . esc_html( $message ) . '</pre></div><div>...</div>' );
         return $message;
     }
 
     public function wp_mail_um_trace_log( $array ) {
 
-        $this->um_log_send_email_filewrite( 'wp_mail: ' . $array['to'] . ' subject: "' . $array['subject'] . '"<div>email message:</div><div>' . esc_html( $array['message'] ) . '</div><div>...</div>' );
+        $this->um_log_send_email_filewrite( 'wp_mail: ' . $array['to'] . ' subject: "' . $array['subject'] . '"<div>email message:</div><div><pre>' . esc_html( $array['message'] ) . '</pre></div><div>...</div>' );
         return $array;
     }
 
@@ -169,7 +169,7 @@ class UM_Log_Send_Email {
 
     public function doing_it_wrong_run_trace_log( $function_name, $message, $version ) {
 
-        $this->um_log_send_email_filewrite( 'WARNING doing_it_wrong_run: ' . $function_name . '<div>email message:</div><div>' . esc_html( $message ) . '</div><div>...</div>' );
+        $this->um_log_send_email_filewrite( 'WARNING doing_it_wrong_run: ' . $function_name . '<div>email message:</div><div><pre>' . esc_html( $message ) . '</pre></div><div>...</div>' );
     }
 
 }
